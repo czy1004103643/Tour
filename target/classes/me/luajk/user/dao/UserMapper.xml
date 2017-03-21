@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.luajk.user.dao.UserDao">
+
+    <resultMap id="user" type="User">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_username"/>
+        <result property="password" column="user_password"/>
+        <result property="nickName" column="user_nickname"/>
+        <result property="sex" column="user_sex"/>
+        <result property="birth" column="user_birth"/>
+        <result property="phone" column="user_phone"/>
+        <result property="photo" column="user_photo"/>
+        <result property="role" column="user_role"/>
+    </resultMap>
+
+    <select id="getUserById" resultMap="user">
+        SELECT *
+        FROM t_user
+        WHERE user_id = #{id}
+    </select>
+
+    <select id="getUserByUsername" resultMap="user">
+        SELECT *
+        FROM t_user
+        WHERE user_username = #{username}
+    </select>
+
+    <select id="isExist" resultType="java.lang.Boolean">
+        SELECT count(*)
+        FROM t_user
+        WHERE enabled = 1 AND user_username = #{username}
+    </select>
+
+    <insert id="addUser">
+        INSERT INTO t_user (user_id, user_username, user_password, user_nickname, enabled, user_role)
+        VALUES
+            (#{id}, #{username}, #{password}, #{nickName}, 1, 0)
+    </insert>
+
+    <update id="updateUser">
+        UPDATE t_user
+        SET enabled = 1
+        <!--<set>-->
+        <!--<if test="username != null and username != ''">-->
+        <!--USER_USERNAME = #{username},-->
+        <!--</if>-->
+        <!--<if test="password != null and password != ''">-->
+        <!--USER_PASSWORD = #{password},-->
+        <!--</if>-->
+        <!--<if test="realName != null and realName != ''">-->
+        <!--USER_REALNAME = #{realName},-->
+        <!--</if>-->
+        <!--<if test="nickName != null and nickName != ''">-->
+        <!--USER_NICKNAME = #{nickName},-->
+        <!--</if>-->
+        <!--USER_SEX = #{sex},-->
+        <!--<if test="phone != null and phone != ''">-->
+        <!--USER_PHONE = #{phone},-->
+        <!--</if>-->
+        <!--<if test="email != null and email != ''">-->
+        <!--USER_EMAIL = #{email},-->
+        <!--</if>-->
+        <!--<if test="birthDate != null">-->
+        <!--USER_BIRTHDATE = #{birthDate},-->
+        <!--</if>-->
+        <!--<if test="photo != null and photo != ''">-->
+        <!--USER_PHOTO = #{photo}-->
+        <!--</if>-->
+        <!--</set>-->
+        WHERE user_id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE t_user
+        <set>
+            <if test="password != null and password != ''">
+                user_password = #{password},
+            </if>
+        </set>
+        WHERE user_id = #{id}
+    </update>
+
+</mapper>

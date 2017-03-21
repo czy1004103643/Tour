@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.luajk.company.dao.CompanyDao">
+
+    <resultMap id="company" type="Company">
+        <id property="id" column="com_id"/>
+        <result property="title" column="com_title"/>
+        <result property="contact" column="com_contact"/>
+        <result property="date" column="com_date"/>
+        <result property="last" column="com_last"/>
+        <result property="num" column="com_num"/>
+        <result property="desc" column="com_desc"/>
+        <association property="dest" javaType="Dictionary" resultMap="dic">
+        </association>
+        <association property="start" javaType="Dictionary" resultMap="dic">
+        </association>
+        <association property="user" javaType="User" resultMap="user">
+        </association>
+    </resultMap>
+
+    <resultMap id="dic" type="Dictionary">
+        <id property="id" column="dic_id"/>
+        <result property="value" column="dic_name"/>
+    </resultMap>
+
+    <resultMap id="user" type="User">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_username"/>
+        <result property="password" column="user_password"/>
+        <result property="nickName" column="user_nickname"/>
+        <result property="sex" column="user_sex"/>
+        <result property="birth" column="user_birth"/>
+        <result property="phone" column="user_phone"/>
+        <result property="photo" column="user_photo"/>
+        <result property="role" column="user_role"/>
+    </resultMap>
+
+    <insert id="add">
+        INSERT INTO t_company (com_id, com_title, com_dest, com_start, com_contact, com_date, com_last, com_num, com_desc, com_user, enabled)
+        VALUES
+            (#{id}, #{title}, #{dest.id}, #{start.id}, #{contact}, #{date}, #{last}, #{num}, #{desc}, #{user.id}, 1)
+    </insert>
+
+    <update id="update">
+        UPDATE t_company
+        SET com_desc = #{desc}
+        WHERE com_id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_company
+        WHERE com_id = #{id}
+    </delete>
+
+    <select id="list" resultMap="company">
+        SELECT *
+        FROM t_company
+            LEFT JOIN t_dictionary A ON com_dest = A.dic_id
+            LEFT JOIN t_dictionary B ON com_start = B.dic_id
+            LEFT JOIN t_user ON com_user = user_id
+    </select>
+
+    <select id="get" resultMap="company">
+        SELECT *
+        FROM t_company
+            LEFT JOIN t_dictionary A ON com_dest = A.dic_id
+            LEFT JOIN t_dictionary B ON com_start = B.dic_id
+            LEFT JOIN t_user ON com_user = user_id
+        WHERE com_id = #{id}
+    </select>
+
+</mapper>

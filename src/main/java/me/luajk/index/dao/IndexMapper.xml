@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.luajk.index.dao.IndexDao">
+
+    <resultMap id="destination" type="Destination">
+        <id property="id" column="destination_id"/>
+        <result property="address" column="destination_addr"/>
+        <result property="outline" column="destination_outline"/>
+        <result property="traffic" column="destination_traffic"/>
+        <result property="tel" column="destination_tel"/>
+        <result property="open" column="destination_open"/>
+        <result property="features" column="destination_features"/>
+        <result property="picture" column="destination_picture"/>
+        <result property="hit" column="destination_hit"/>
+    </resultMap>
+
+    <select id="init" resultMap="destination">
+        SELECT
+            destination_id,
+            destination_addr,
+            destination_picture
+        FROM t_destination
+        WHERE enabled = 1
+    </select>
+
+    <select id="top3" resultMap="destination">
+        SELECT
+            destination_id,
+            destination_addr,
+            destination_outline,
+            destination_picture,
+            destination_hit
+        FROM t_destination
+        WHERE enabled = 1
+        ORDER BY destination_hit DESC
+        LIMIT 0, 3
+    </select>
+
+    <select id="random3" resultMap="destination" statementType="STATEMENT">
+        SELECT
+            destination_id,
+            destination_addr,
+            destination_outline,
+            destination_picture,
+            destination_hit
+        FROM t_destination
+        WHERE enabled = 1
+        ORDER BY destination_hit DESC
+        LIMIT 0, 3
+    </select>
+
+</mapper>

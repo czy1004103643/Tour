@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.luajk.reply.dao.ReplyDao">
+
+    <resultMap id="reply" type="Reply">
+        <id property="id" column="re_id"/>
+        <result property="obj" column="re_obj"/>
+        <result property="type" column="re_type"/>
+        <result property="time" column="re_time"/>
+        <result property="content" column="re_content"/>
+        <result property="approval" column="re_approval"/>
+        <result property="disapproval" column="re_disapproval"/>
+        <result property="parent" column="re_parent"/>
+        <association property="user" javaType="User" resultMap="user">
+        </association>
+    </resultMap>
+
+    <resultMap id="user" type="User">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_username"/>
+        <result property="password" column="user_password"/>
+        <result property="nickName" column="user_nickname"/>
+        <result property="sex" column="user_sex"/>
+        <result property="birth" column="user_birth"/>
+        <result property="phone" column="user_phone"/>
+        <result property="photo" column="user_photo"/>
+        <result property="role" column="user_role"/>
+    </resultMap>
+
+    <resultMap id="replies" type="Reply" extends="reply">
+        <collection property="replies" ofType="Reply" resultMap="reply">
+        </collection>
+    </resultMap>
+
+    <select id="listComment" resultMap="replies">
+        SELECT
+            A.*,
+            B.*
+        FROM (SELECT
+                  t_reply.*,
+                  C.*
+              FROM t_reply
+                  LEFT JOIN t_user C ON re_user = C.user_id
+              WHERE re_parent = #{destination} AND re_status &lt; 2
+              LIMIT #{index}, #{size}) A
+            LEFT JOIN t_reply B ON A.re_id = B.re_parent
+            LEFT JOIN t_user D ON B.re_user = D.user_id
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_reply
+        WHERE re_status &lt; 2 AND re_parent = #{destination}
+    </select>
+
+    <insert id="addComment">
+        INSERT INTO t_reply (re_id, re_obj, re_type, re_time, re_content, re_approval, re_disapproval, re_status, re_parent, re_user)
+        VALUES
+            (#{id}, #{obj}, #{type}, #{time}, #{content}, #{approval}, #{disapproval}, 0, #{parent}, #{user.id})
+    </insert>
+
+    <update id="deleteComment">
+        UPDATE t_reply
+        SET re_status = 2
+        WHERE re_id = #{id}
+    </update>
+
+</mapper>

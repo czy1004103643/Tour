@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.luajk.tags.dao.TagsDao">
+
+    <resultMap id="tags" type="Tags">
+        <id property="id" column="tag_id"/>
+        <result property="value" column="tag_name"/>
+    </resultMap>
+
+    <insert id="relate">
+        INSERT INTO t_tags_rela (tag_id, rela_id) VALUES (#{0}, #{1})
+    </insert>
+
+    <delete id="disrelate">
+        DELETE FROM t_tags_rela
+        WHERE tag_id = #{0} AND rela_id = #{1}
+    </delete>
+
+</mapper>

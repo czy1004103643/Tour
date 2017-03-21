@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="me.luajk.company.model.Company" alias="Company"/>
+        <typeAlias type="me.luajk.company.model.Sign" alias="Sign"/>
+        <typeAlias type="me.luajk.question.model.Question" alias="Question"/>
+        <typeAlias type="me.luajk.reply.model.Reply" alias="Reply"/>
+        <typeAlias type="me.luajk.destination.model.Destination" alias="Destination"/>
+        <typeAlias type="me.luajk.news.model.News" alias="News"/>
+        <typeAlias type="me.luajk.notes.model.TbNotes" alias="Notes"/>
+        <typeAlias type="me.luajk.log.model.Log" alias="Log"/>
+        <typeAlias type="me.luajk.user.model.User" alias="User"/>
+        <typeAlias type="me.luajk.dictionary.model.Dictionary" alias="Dictionary"/>
+        <typeAlias type="me.luajk.tags.model.Tags" alias="Tags"/>
+    </typeAliases>
+
+</configuration>

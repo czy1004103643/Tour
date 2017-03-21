@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.luajk.news.dao.InformationDao">
+
+    <resultMap id="information" type="News">
+        <id property="id" column="INFORMATION_ID"/>
+        <result property="title" column="INFORMATION_TITLE"/>
+        <result property="time" column="INFORMATION_TIME"/>
+        <result property="content" column="INFORMATION_CONTENT"/>
+        <result property="source" column="INFORMATION_SOURCE"/>
+    </resultMap>
+
+    <select id="listInformation" resultMap="information">
+        SELECT *
+        FROM t_news
+        WHERE destination_id = #{destination}
+        LIMIT #{index}, #{size}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_news
+        WHERE destination_id = #{destination}
+    </select>
+
+</mapper>

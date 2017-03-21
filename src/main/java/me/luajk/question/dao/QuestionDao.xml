@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.luajk.question.dao.QuestionDao">
+
+    <resultMap id="question" type="Question">
+        <id property="id" column="ques_id"/>
+        <result property="title" column="ques_title"/>
+        <result property="content" column="ques_content"/>
+        <result property="date" column="ques_date"/>
+        <result property="hit" column="ques_hit"/>
+        <result property="approval" column="ques_approval"/>
+        <result property="anon" column="anonymous"/>
+        <association property="dest" javaType="Dictionary" resultMap="dic">
+        </association>
+        <association property="user" javaType="User" resultMap="user">
+        </association>
+        <collection property="tags" ofType="Tags" resultMap="tags">
+        </collection>
+    </resultMap>
+
+    <resultMap id="dic" type="Dictionary">
+        <id property="id" column="dic_id"/>
+        <result property="value" column="dic_name"/>
+    </resultMap>
+
+    <resultMap id="tags" type="Tags">
+        <id property="id" column="tag_id"/>
+        <result property="value" column="tag_name"/>
+    </resultMap>
+
+    <resultMap id="user" type="User">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_username"/>
+        <result property="password" column="user_password"/>
+        <result property="nickName" column="user_nickname"/>
+        <result property="sex" column="user_sex"/>
+        <result property="birth" column="user_birth"/>
+        <result property="phone" column="user_phone"/>
+        <result property="photo" column="user_photo"/>
+        <result property="role" column="user_role"/>
+    </resultMap>
+
+    <insert id="addQues">
+        INSERT INTO t_question (ques_id, ques_title, ques_content, ques_dest, ques_date, ques_hit, ques_approval, ques_user, anonymous, status, enabled)
+        VALUES
+            (#{id}, #{title}, #{content}, #{dest.id}, #{date}, 0, 0, #{user.id}, #{anon}, 1, 1)
+    </insert>
+
+    <update id="updateQues">
+        UPDATE t_question
+        SET ques_content = #{content}
+        WHERE ques_id = #{id}
+    </update>
+
+    <update id="deleteQues">
+        UPDATE t_question
+        SET enabled = 0
+        WHERE ques_id = #{id}
+    </update>
+
+    <select id="listQues" resultMap="question">
+        SELECT *
+        FROM t_question
+            LEFT JOIN t_dictionary ON ques_dest = dic_id
+            LEFT JOIN t_user ON ques_user = user_id
+            LEFT JOIN t_tags_rela ON ques_id = rela_id
+            LEFT JOIN t_tags ON t_tags_rela.tag_id = t_tags.tag_id
+        WHERE t_question.enabled = 1
+    </select>
+
+    <select id="getQues" resultMap="question">
+        SELECT *
+        FROM t_question
+            LEFT JOIN t_dictionary ON ques_dest = dic_id
+            LEFT JOIN t_user ON ques_user = user_id
+            LEFT JOIN t_tags_rela ON ques_id = rela_id
+            LEFT JOIN t_tags ON t_tags_rela.tag_id = t_tags.tag_id
+        WHERE t_question.ques_id = #{id}
+    </select>
+
+</mapper>
